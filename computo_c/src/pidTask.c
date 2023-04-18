@@ -43,7 +43,7 @@
 /*=====[Implementations of public functions]=================================*/
 
 // Para calcular el tiempo que tarda el algoritmo y establecer un h minimo
-//#define COUNT_CYCLES
+#define COUNT_CYCLES
 
 // Task implementation
 void pidControlTask( void* taskParmPtr )
@@ -56,8 +56,6 @@ void pidControlTask( void* taskParmPtr )
    int16_t y_i;
    int16_t dumy = 0xffff;
    int16_t t_c = 0;
-   portTickType ticks_computo;
-   portTickType ticks_computo_init;
 
    // h no puede ser menor ni al tiempo del algoritmo, y con va a ser un
    // multiplo del periodo de tick del RTOS
@@ -103,8 +101,6 @@ void pidControlTask( void* taskParmPtr )
          cyclesCounterReset();
       #endif
       
-      ticks_computo_init = xTaskGetTickCount();
-
       // Leer salida y[k] y refererencia r[k]
       y = adcRead( CH1 ) * SCALE_Y;
       y_i = (int16_t) (y*100); // multiplicamos por 100 para no perder la parte decimal
@@ -130,9 +126,8 @@ void pidControlTask( void* taskParmPtr )
       uartWriteByteArray ( UART_USB ,(uint8_t* )(&y_i),sizeof(int16_t));
 
       // Update PID controller for next iteration
-      pidUpdateController( &PsPIDController, y, r );
+      pidUpdateController( &PsPIDController, y, r );    
       
-      ticks_computo = xTaskGetTickCount();
 
       #ifdef COUNT_CYCLES
          // Leer conteco actual de ciclos
@@ -142,7 +137,7 @@ void pidControlTask( void* taskParmPtr )
       
       if (i == 0)
       {
-         t_c = (ticks_computo - ticks_computo_init ) * portTICK_RATE_MS;
+         t_c = us;
          uartWriteByteArray ( UART_USB ,(uint8_t* )(&dumy),sizeof(int16_t));
          uartWriteByteArray ( UART_USB ,(uint8_t* )(&t_c),sizeof(int16_t));
          uartWriteByteArray ( UART_USB ,(uint8_t* )(&dumy),sizeof(int16_t));
