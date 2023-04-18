@@ -20,13 +20,14 @@ i = 0
 for i in range(cant_pulsos-1):
     cant =  np.random.randint(5,15)
     j = 0
+    m =  np.random.randint(0,100) 
     while(j<cant):
-        s_ref[j+(i*40)] = 1
+        s_ref[j+(i*40)] = m
         j = j + 1
 
 j = 160
 while(j<180):
-    s_ref[j] = 1
+    s_ref[j] = 100
     j = j + 1
 
 # guardo la señal generada en un archivo

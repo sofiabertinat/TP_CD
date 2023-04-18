@@ -7,7 +7,7 @@ import io
 import serial
 
 N = 500
-size = 4
+size = 2
 puerto = "COM5" 
 baudrate = 460800
 sample = serial.Serial(port=puerto, baudrate=baudrate,timeout=None)
